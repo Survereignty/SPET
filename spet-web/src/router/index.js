@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '../store/'
 
 Vue.use(VueRouter)
 
@@ -8,7 +9,15 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
   },
   {
     path: '/login',
@@ -18,22 +27,54 @@ Vue.use(VueRouter)
   {
     path: '/students',
     name: 'Students',
-    component: () => import('../views/Students.vue')
+    component: () => import('../views/Students.vue'),
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
   },
   {
     path: '/docs',
     name: 'Docs',
-    component: () => import('../views/Docs.vue')
+    component: () => import('../views/Docs.vue'),
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
   },
   {
     path: '/comps',
     name: 'Comps',
-    component: () => import('../views/Comps.vue')
+    component: () => import('../views/Comps.vue'),
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
   },
   {
     path: '/table',
     name: 'Table',
-    component: () => import('../views/Table.vue')
+    component: () => import('../views/Table.vue'),
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
   }
 ]
 
