@@ -3217,3 +3217,8 @@ created by net/http.(*Server).Serve
 2020/06/14 19:03:13 [INFO] Config file is init
 2020/06/14 19:03:13 [INFO] Database is connected
 2020/06/14 19:03:13 [START] Server listen port -> :3002
+2020/06/14 19:11:34 |------------- Server starting ----------------|
+2020/06/14 19:11:34 [INFO] Logs is init
+2020/06/14 19:11:34 [INFO] Config file is init
+2020/06/14 19:11:34 [INFO] Database is connected
+2020/06/14 19:11:34 [START] Server listen port -> :3002

@@ -1,5 +1,5 @@
 {
-    "Address": ":3002",
+    "Address": ":3000",
     "DataBase": {
         "DatabaseURL": "host=localhost password=1234 dbname=spet sslmode=disable"
     }
