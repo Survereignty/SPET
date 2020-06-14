@@ -27,6 +27,18 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item
+                    @click="CREATE_GROUP"
+                >
+                    <v-list-item-action>
+                    <v-icon>{{ items[5].icon }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                    <v-list-item-title class="grey--text">
+                        {{ items[5].text }}
+                    </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item
                     @click="CREATE_ON_TABLE"
                 >
                     <v-list-item-action>
@@ -200,14 +212,38 @@
                 </v-col>
                 <v-col cols="6">
                 <v-text-field
+                    v-model="red_student.flat"
+                    placeholder="Квартира"
+                ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                <v-text-field
                     v-model="red_student.phone"
                     placeholder="Домашний телефон"
                 ></v-text-field>
                 </v-col>
                 <v-col cols="6">
                 <v-text-field
+                    v-model="red_student.activs"
+                    placeholder="Активность"
+                ></v-text-field>
+                </v-col>
+                <v-col cols="6">
+                <v-text-field
                     v-model="red_student.info"
                     placeholder="Доп. информация"
+                ></v-text-field>
+                </v-col>
+                <v-col cols="6" v-if="!mode">
+                <v-text-field
+                    v-model="red_student.login"
+                    placeholder="Логин"
+                ></v-text-field>
+                </v-col>
+                <v-col cols="6" v-if="!mode">
+                <v-text-field
+                    v-model="red_student.password"
+                    placeholder="Пароль"
                 ></v-text-field>
                 </v-col>
                 <v-col cols="6">
@@ -354,6 +390,63 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+            <v-dialog
+            v-model="dialog_group"
+            max-width="420"
+            >
+            <v-card>
+                <v-card-title class="headline">Удалить группу {{select_group}}?</v-card-title>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="dialog_group = false"
+                >
+                    Отмена
+                </v-btn>
+
+                <v-btn
+                    color="green darken-1"
+                    text
+                    @click="DELETE_GROUP_YES"
+                >
+                    Потверждаю
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="dialog_templ" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                <span class="headline">Дайте имя новой группе</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-text-field v-model="groupName" label="Название" required></v-text-field>
+                </v-container>
+                    <v-simple-table>
+                    <template v-slot:default>
+                    <thead>
+                        <tr>
+                        <th class="text-left">Группа</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in GROUP_LIST" :key="item.id">
+                        <td @click="DELETE_GROUP(item)">{{ item }}</td>
+                        </tr>
+                    </tbody>
+                    </template>
+                </v-simple-table>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red darken-1" text @click="dialog_templ = false">Отмена</v-btn>
+                <v-btn color="blue darken-1" text @click="SAVE_GROUP">Сохранить</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
@@ -367,6 +460,10 @@ export default({
     },
     data () {
         return {
+            dialog_templ: false,
+            groupName: "",
+            dialog_group: false,
+            select_group: "",
             created: false,
             dialog: false,
             mode: false,
@@ -378,6 +475,7 @@ export default({
                 { icon: 'mdi-printer', text: 'Печать' },
                 { icon: 'mdi-pencil', text: 'Изменить' },
                 { icon: 'mdi-delete', text: 'Удалить' },
+                { icon: 'mdi-account-group', text: 'Добавить группу' },
             ],
             red_student:
             {
@@ -390,6 +488,7 @@ export default({
                 street: "",
                 house: "",
                 flat: "",
+                activs: "",
                 phone: "",
                 info: "",
                 gender: "",
@@ -421,6 +520,9 @@ export default({
         TEMPLATES() {
             return this.$store.state.students.TEMPLATES
         },
+    },
+    created() {
+        this.$store.dispatch("GET_GROUPS");
     },
     methods: {
         del_templ({id}) {
@@ -472,10 +574,14 @@ export default({
                     i.filtres.low_parents = false;
                 }
             }
-            this.$store.commit("UPDATE_HEADERS_TABLES", {
-                headers: i.headers,
-                filtres: i.filtres
-            })
+
+            let headAndFill = {
+                headers: {},
+                filtres: {}
+            };
+            headAndFill.headers = i.headers
+            headAndFill.filtres = i.filtres
+            this.$store.commit("UPDATE_HEADERS_TABLES", headAndFill)
             this.$store.commit("UPDATE_FILTRES", {
                 filtres: i.filtres,
             })
@@ -485,6 +591,12 @@ export default({
         },
         OPEN_WAR() {
             this.dialog_war = true;
+        },
+        OPEN_LOAD() {
+            this.dialog_load = true;
+        },
+        LOAD_FILE() {
+            this.dialog_load = true;
         },
         CREATE() {
             this.red_student = {
@@ -498,6 +610,7 @@ export default({
                 house: "",
                 flat: "",
                 phone: "",
+                activs: "",
                 info: "",
                 gender: "",
                 numGroup: "",
@@ -513,8 +626,8 @@ export default({
                 kdn: false,
                 many_children: false,
             }
-            this.dialog = true;
             this.mode = true;
+            this.dialog = true;
         },
         CREATE_EDIT() {
             if (this.SELECTED.length != 0) {
@@ -523,6 +636,21 @@ export default({
                 this.mode = false;
             }
         },
+        CREATE_GROUP() {
+            this.dialog_templ = true
+        },
+        DELETE_GROUP(item) {
+            this.dialog_group = true
+            this.select_group = item
+        },
+        DELETE_GROUP_YES() {
+            this.dialog_group = false
+            this.$store.dispatch("DELETE_GROUP", this.select_group);
+        },
+        SAVE_GROUP() {
+            this.$store.dispatch("CREATE_GROUP", this.groupName);
+            this.dialog_templ = false
+        },
         CLOSE() {
             this.dialog = false;
         },
@@ -530,7 +658,7 @@ export default({
             console.log("CREATE_ON_TABLE")
         },
         EDIT() {
-            this.$store.dispatch("UPDATE_STUDENT", this.student);
+            this.$store.dispatch("UPDATE_STUDENT", this.red_student);
             this.dialog = false;
             this.red_student = {
                 id: "",
@@ -544,6 +672,7 @@ export default({
                 flat: "",
                 phone: "",
                 info: "",
+                activs: "",
                 gender: "",
                 numGroup: "",
                 status: "",
@@ -561,10 +690,10 @@ export default({
         },
         DELETE() {
             this.dialog_war = false;
-            this.$store.dispatch("DELETE_STUDENT", this.SELECTED);
+            this.$store.dispatch("DELETE_STUDENT");
         },
         ADD_STUDENTS() {
-            this.$store.dispatch("ADD_STUDENT", this.student);
+            this.$store.dispatch("ADD_STUDENT", this.red_student);
             this.red_student = {
                 id: "",
                 surname: "",
@@ -577,6 +706,7 @@ export default({
                 flat: "",
                 phone: "",
                 info: "",
+                activs: "",
                 gender: "",
                 numGroup: "",
                 status: "",

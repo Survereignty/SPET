@@ -31,6 +31,10 @@
                     <v-text-field v-model="filtres.password" label="Пароль"></v-text-field>
                   </v-row>
                   <v-row>
+                    <v-checkbox v-model="heders.activs"></v-checkbox>
+                    <v-text-field v-model="filtres.activs" label="Активность"></v-text-field>
+                  </v-row>
+                  <v-row>
                     <v-checkbox v-model="heders.numGroup"></v-checkbox>
                     <v-select
                       v-model="filtres.numGroup"
@@ -295,6 +299,7 @@ export default {
           house: false,
           flat: false,
           phone: false,
+          activs: false,
           info: false,
           gender: false,
           numGroup: true,
@@ -324,6 +329,7 @@ export default {
           flat: "",
           phone: "",
           info: "",
+          activs: "",
           gender: "",
           numGroup: "",
           status: "",
@@ -366,6 +372,7 @@ export default {
         }
     },
     created() {
+      this.$store.dispatch("GET_STUDENTS")
     },
     methods: {
       set_filtrs() {
@@ -458,6 +465,7 @@ export default {
           flat: "",
           phone: "",
           info: "",
+          activs: "",
           gender: "",
           numGroup: "",
           status: "",

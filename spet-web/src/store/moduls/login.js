@@ -3,7 +3,7 @@
 export default {
     state: {
         from: {},
-        login: false,
+        login: true,
         loginName: "",
         password: "",
         role: "",

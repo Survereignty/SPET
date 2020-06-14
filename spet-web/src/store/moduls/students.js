@@ -1,4 +1,32 @@
-//import {HTTP} from '../aixos/http'
+import {HTTP} from '../aixos/http'
+
+
+const
+rus = "щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
+eng = "shh sh ch cz yu ya yo zh `` y' e` a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g);
+
+function gen_password(){
+    var password = "";
+    var symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 11; i++){
+        password += symbols.charAt(Math.floor(Math.random() * symbols.length));
+    }
+    return password;
+}
+
+function translit(text, engToRus) {
+    var x;
+    try {
+        for(x = 0; x < rus.length; x++) {
+            text = text.split(engToRus ? eng[x] : rus[x]).join(engToRus ? rus[x] : eng[x]);
+            text = text.split(engToRus ? eng[x].toUpperCase() : rus[x].toUpperCase()).join(engToRus ? rus[x].toUpperCase() : eng[x].toUpperCase());
+        }
+    } catch (error) {
+        console.log(error)
+        return "";
+    }
+    return text;
+}
 
 export default {
     state: {
@@ -6,6 +34,10 @@ export default {
             {}
         ],
         TEMPLATES: JSON.parse(localStorage.getItem("Templates")) || [],
+        headAndFill: {
+            headers: {},
+            filtres: {}
+        },
         HEADERS: {
             id: false,
             surname: true,
@@ -18,6 +50,7 @@ export default {
             flat: false,
             phone: false,
             info: false,
+            activs: false,
             gender: false,
             numGroup: true,
             status: false,
@@ -43,6 +76,7 @@ export default {
             street: "",
             house: "",
             flat: "",
+            activs: "",
             phone: "",
             info: "",
             gender: "",
@@ -66,112 +100,8 @@ export default {
             status: ["u", "i"]
         },
         STUDENTS: [
-            {
-                id: 1,
-                surname: "Vasin",
-                middleName: "Vasiliev",
-                name: "Vasa",
-                date_b: "12.12.2001",
-                city: "Южно-Сахалинск",
-                street: "Студенческая",
-                house: "23",
-                flat: "3",
-                phone: "+79006647644",
-                info: "Тут что то должно быть",
-                gender: "муж",
-                numGroup: "ОП1601",
-                status: "Учиться",
-                orphan: true,
-                invalid: false,
-                low_income: false,
-                low_parents: false,
-                idn: false,
-                kdn: false,
-                many_children: false,
-                login: "",
-                password: "",
-                budget: "Бюджет",
-            },
-            {
-                id: 2,
-                surname: "Peta",
-                middleName: "Petae",
-                name: "Petae",
-                date_b: "12.12.2001",
-                city: "Южно-Сахалинск",
-                street: "Студенческая",
-                house: "23",
-                flat: "3",
-                phone: "+79006647644",
-                info: "Тут что то должно быть",
-                gender: "М",
-                numGroup: "ОП1601",
-                status: "Учиться",
-                orphan: false,
-                invalid: false,
-                low_income: false,
-                low_parents: true,
-                idn: false,
-                kdn: false,
-                many_children: false,
-                login: "",
-                password: "",
-                budget: "Бюджет",
-            }
         ],
         SORT_STUDENTS: [
-            {
-                id: 1,
-                surname: "Vasin",
-                middleName: "Vasiliev",
-                name: "Vasa",
-                date_b: "12.12.2001",
-                city: "Южно-Сахалинск",
-                street: "Студенческая",
-                house: "23",
-                flat: "3",
-                phone: "+79006647644",
-                info: "Тут что то должно быть",
-                gender: "М",
-                numGroup: "ОП1601",
-                status: "Учиться",
-                orphan: false,
-                invalid: false,
-                low_income: false,
-                low_parents: false,
-                idn: false,
-                kdn: false,
-                many_children: false,
-                login: "",
-                password: "",
-                budget: "Бюджет",
-            },
-            {
-                id: 2,
-                surname: "Peta",
-                middleName: "Petae",
-                name: "Petae",
-                date_b: "12.12.2001",
-                city: "Южно-Сахалинск",
-                street: "Студенческая",
-                house: "23",
-                flat: "3",
-                phone: "+79006647644",
-                info: "Тут что то должно быть",
-                gender: "М",
-                numGroup: "ОП1601",
-                status: "Учиться",
-                orphan: false,
-                invalid: false,
-                low_income: false,
-                low_parents: true,
-                idn: false,
-                kdn: false,
-                many_children: false,
-                login: "",
-                password: "",
-                budget: "Бюджет",
-            }
         ],
         GROUP_LIST: [
         ],
@@ -190,6 +120,9 @@ export default {
         },
         UPDATE_FILTRES(state, filtres) {
             state.FILTRES = filtres
+        },
+        LOADING(state, bool) {
+            state.LOADING = bool
         },
         UPDATE_TEMPLATES(state, item) {
             item.id = state.TEMPLATES.length;
@@ -214,6 +147,8 @@ export default {
             state.SELECTED = students
         },
         UPDATE_HEADERS_TABLES(state, {headers, filtres}) {
+            state.headAndFill.headers = headers;
+            state.headAndFill.filtres = filtres;
             state.TABLE_HEADERS = []
             for (let i in headers) {
                 if (i === "id" & headers[i]) state.TABLE_HEADERS.push(
@@ -241,7 +176,7 @@ export default {
                     { text: 'Дом', value: 'house' }
                 )
                 if (i === "flat" & headers[i]) state.TABLE_HEADERS.push(
-                    { text: 'Этаж', value: 'flat' }
+                    { text: 'Квартира', value: 'flat' }
                 )
                 if (i === "phone" & headers[i]) state.TABLE_HEADERS.push(
                     { text: 'Дом. телефон', value: 'phone' }
@@ -310,34 +245,110 @@ export default {
     },
     actions: {
         async ADD_STUDENT({commit, state}, item) {
-            state.STUDENTS.push(item)
-            commit("UPDATE_HEADERS_TABLES", {
-                headers: state.HEADERS,
-                filtres: state.FILTRES
+            commit('LOADING', true)
+            item.login = (translit(item.surname) + "_" + translit(item.name[0]) + translit(item.middleName[0])).toLowerCase();
+            item.password = gen_password();
+            await HTTP.post('students', item)
+            .then(() => {
+                state.STUDENTS.push(item)
+                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
+        async GET_STUDENTS({commit}, item) {
+            commit('LOADING', true)
+            await HTTP.get('students', item)
+            .then(({data}) => {
+                commit('UPDATE_STUDENTS', data)
+                commit('UPDATE_SORT_STUDENTS', data)
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
             })
         },
         async UPDATE_STUDENT({commit, state}, item) {
-            state.STUDENTS =  state.STUDENTS.map(o => {
-                if (o.id === item.id) {
-                    return item;
-                }
-                return o;
-            });
-            commit("UPDATE_HEADERS_TABLES", {
-                headers: state.HEADERS,
-                filtres: state.FILTRES
+            commit('LOADING', true)
+            await HTTP.put('students', item)
+            .then(() => {
+                state.STUDENTS = state.STUDENTS.map(o => {
+                    if (o.id === item.id) {
+                        return item;
+                    }
+                    return o;
+                });
+                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
             })
         },
-        async DELETE_STUDENT({commit, state}, items) {
-            items.map(a => {
-                state.STUDENTS = state.STUDENTS.filter(i => {
-                    return i.id !== a.id
+        async DELETE_STUDENT({commit, state}) {
+            commit('LOADING', true)
+            for (let v in state.SELECTED) {
+                await HTTP.post('studentsDel', state.SELECTED[v])
+                .then(() => {
+                    state.SELECTED.map(a => {
+                        state.STUDENTS = state.STUDENTS.filter(i => {
+                            return i.id !== a.id
+                        })
+                    })
+                    commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                    commit('LOADING', false)
                 })
+                .catch((err) => {
+                    console.log(err)
+                    commit('LOADING', false)
+                })
+            }
+            state.SELECTED = []
+        },
+        async CREATE_GROUP({commit, state}, name) {
+            commit('LOADING', true)
+            await HTTP.post('groups', {name})
+            .then(() => {
+                state.GROUP_LIST.push(name)
+                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                commit('LOADING', false)
             })
-            commit("UPDATE_HEADERS_TABLES", {
-                headers: state.HEADERS,
-                filtres: state.FILTRES
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
             })
-        }
+        },
+        async GET_GROUPS({commit, state}) {
+            state.GROUP_LIST = [];
+            commit('LOADING', true)
+            await HTTP.get('groups')
+            .then(({data}) => {
+                for (let v in data) {
+                    state.GROUP_LIST.push(data[v].name)
+                }
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
+        async DELETE_GROUP({dispatch, commit}, name) {
+            commit('LOADING', true)
+            await HTTP.post('groupsDel', {name})
+            .then(() => {
+                dispatch("GET_GROUPS");
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
     }
 }

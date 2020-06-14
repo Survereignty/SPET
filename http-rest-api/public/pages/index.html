@@ -1,0 +1,18 @@
+{{define "index"}}
+{{template "header"}}
+<body>
+    <header>
+        <h1>Header</h1>
+    </header>
+    <h1>Hello world</h1>
+    <div id="root">
+        <input type="text" v-model="name" placeholder="Имя">
+        <button @click="send">Создать</button>
+
+        <div v-for="item in dates">
+            <input v-bind:value="item.name"></input>
+        </div>
+    </div>
+</body>
+{{template "footer"}}
+{{end}}

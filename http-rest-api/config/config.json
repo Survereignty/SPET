@@ -1,0 +1,6 @@
+{
+    "Address": ":3002",
+    "DataBase": {
+        "DatabaseURL": "host=localhost password=1234 dbname=spet sslmode=disable"
+    }
+}
