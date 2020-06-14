@@ -28,6 +28,7 @@ func (s *Api) Start() error {
 	if err := s.Store(); err != nil {
 		return err
 	}
+
 	s.Routers()
 
 	lig.Listen("Server listen port", s.config.Address)

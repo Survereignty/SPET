@@ -6,17 +6,27 @@ import (
 
 	"encoding/json"
 	"net/http"
-	"text/template"
 )
 
 func (s *Api) Routers() {
-	s.router.HandleFunc("/", s.indexPage())
-	s.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("public/static"))))
+	//s.router.HandleFunc("/", s.indexPage())
+
+	//s.router.PathPrefix("/dist").Handler(http.FileServer(http.Dir("dist/static/")))
+	// http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./dist/"))))
+	// s.router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	// s.router.PathPrefix("/").HandlerFunc(IndexHandler("templates/index.html"))
 
 	s.router.HandleFunc("/groups", s.Groups()).Methods(http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions)
 	s.router.HandleFunc("/groupsDel", s.GroupsDel()).Methods(http.MethodPost, http.MethodOptions)
 	s.router.HandleFunc("/students", s.Students()).Methods(http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut, http.MethodOptions)
 	s.router.HandleFunc("/studentsDel", s.StudentsDel()).Methods(http.MethodPost, http.MethodOptions)
+}
+
+func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, entrypoint)
+	}
+	return http.HandlerFunc(fn)
 }
 
 func (s *Api) setHeaders(w *http.ResponseWriter) {
@@ -27,11 +37,9 @@ func (s *Api) setHeaders(w *http.ResponseWriter) {
 
 func (s *Api) indexPage() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		t, _ := template.ParseFiles(
-			"./public/pages/index.html",
-			"./public/components/header.html",
-			"./public/components/footer.html")
-		t.ExecuteTemplate(w, "index", nil)
+		// t, _ := template.ParseFiles("./public/pages/index.html")
+		// t.ExecuteTemplate(w, "index", nil)
+		http.ServeFile(w, r, "./public/static/index.html")
 	}
 }
 
