@@ -1,23 +1,12 @@
 <template>
-      <v-app id="inspire">
-        <v-navigation-drawer
-            v-model="drawer"
-            app
-            clipped
-            color="grey lighten-4"
-            >
-            <v-list
-                dense
-                class="grey lighten-4"
-            >
-                <v-divider
-                    dark
-                    class="my-4"
-                ></v-divider>
-            </v-list>
-
-                <v-card
-                    v-for="item in TEMPLATES"
+    <v-app id="inspire">
+            <v-navigation-drawer
+        v-model="drawer"
+        app
+        >
+        <v-list dense>
+             <v-card
+                    v-for="item in TEMPLATES_COMPS"
                     :key="item.id"
                     class="mx-auto ma-2"
                     max-width="240"
@@ -45,51 +34,55 @@
                     </v-btn>
                     </v-card-actions>
                 </v-card>
-            </v-navigation-drawer>
-
+        </v-list>
+        </v-navigation-drawer>
         <v-app-bar
-        :clipped-left="$vuetify.breakpoint.lgAndUp"
-        app
-        color="blue darken-3"
-        dark
+            app
+            color="green"
+            dark
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title
-            style="width: 300px"
-            class="ml-0 pl-4"
+    </v-app-bar>
+    <v-container
+    class="fill-height"
+    fluid
+    >
+        <v-row
+            align="center"
+            justify="center"
         >
-            <span class="hidden-sm-and-down"></span>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-            <v-icon>mdi-apps</v-icon>
-        </v-btn>
-        <v-btn icon>
-            <v-icon>mdi-bell</v-icon>
-        </v-btn>
-        <v-btn
-            icon
-            large
-        >
-            <v-avatar
-            size="32px"
-            item
-            >
-            <v-img
-                src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-                alt="Vuetify"
-            ></v-img></v-avatar>
-        </v-btn>
-        </v-app-bar>
-        <v-content>
-            <TableStudents></TableStudents>
-        </v-content>
-    </v-app>
+            <v-col class="text-center">
+                <TableComps/>
+            </v-col>
+        </v-row>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
+import TableComps from "../components/TableComps";
+
 export default {
-    name: "Comps"
+    name: "Comps",
+    components: {
+        TableComps
+    },
+    data: () => ({
+        drawer: null,
+    }),
+    computed: {
+        TEMPLATES_COMPS() {
+            return this.$store.state.students.TEMPLATES_COMPS
+        },
+    },
+    methods: {
+        del_templ({id}) {
+            this.$store.commit("DELETE_TEMPLATES_COMP", id)
+        },
+        use_templ(i) {
+            this.$store.commit("STUDENTS_COMP_TEMPL", i)
+        }
+    }
 }
 </script>
 

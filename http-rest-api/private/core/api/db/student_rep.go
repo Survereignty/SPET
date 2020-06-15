@@ -47,6 +47,31 @@ func (r *StudentRep) Delete(m *model.Student) error {
 	return nil
 }
 
+func (r *StudentRep) GetSelectGroup(name string) ([]*model.Student, error) {
+
+	rows, err := r.store.db.Query("SELECT id, surname, name, middleName, numGroup, login FROM students WHERE numGroup = $1",
+		name)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	sts := make([]*model.Student, 0)
+	for rows.Next() {
+		st := new(model.Student)
+		err := rows.Scan(&st.Id, &st.Surname, &st.MiddleName, &st.Name, &st.NumGroup, &st.Login)
+		if err != nil {
+			return nil, err
+		}
+		sts = append(sts, st)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return sts, nil
+}
+
 // Получить всех студентов
 func (r *StudentRep) Get() ([]*model.Student, error) {
 

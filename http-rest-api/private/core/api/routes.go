@@ -18,7 +18,9 @@ func (s *Api) Routers() {
 
 	s.router.HandleFunc("/groups", s.Groups()).Methods(http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions)
 	s.router.HandleFunc("/groupsDel", s.GroupsDel()).Methods(http.MethodPost, http.MethodOptions)
+
 	s.router.HandleFunc("/students", s.Students()).Methods(http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut, http.MethodOptions)
+	s.router.HandleFunc("/studentsGroup", s.StudentsGroup()).Methods(http.MethodPost, http.MethodOptions)
 	s.router.HandleFunc("/studentsDel", s.StudentsDel()).Methods(http.MethodPost, http.MethodOptions)
 }
 
@@ -40,6 +42,25 @@ func (s *Api) indexPage() http.HandlerFunc {
 		// t, _ := template.ParseFiles("./public/pages/index.html")
 		// t.ExecuteTemplate(w, "index", nil)
 		http.ServeFile(w, r, "./public/static/index.html")
+	}
+}
+
+func (s *Api) StudentsGroup() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		s.setHeaders(&w)
+
+		u := &model.Group{}
+		json.NewDecoder(r.Body).Decode(u)
+
+		if r.Method == http.MethodPost {
+			um, err := s.store.Student().GetSelectGroup(u.Name)
+			if err != nil {
+				lig.Error("Route", err)
+				s.error(w, r, http.StatusNotFound, err)
+				return
+			}
+			s.respond(w, r, http.StatusOK, um)
+		}
 	}
 }
 

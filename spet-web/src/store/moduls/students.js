@@ -30,14 +30,14 @@ function translit(text, engToRus) {
 
 export default {
     state: {
+        group: JSON.parse(localStorage.getItem("group")) || "",
+        room: JSON.parse(localStorage.getItem("room")) || "",
+        students: [],
         TEMP: [
             {}
         ],
         TEMPLATES: JSON.parse(localStorage.getItem("Templates")) || [],
-        headAndFill: {
-            headers: {},
-            filtres: {}
-        },
+        TEMPLATES_COMPS: JSON.parse(localStorage.getItem("Templates_Comps")) || [],
         HEADERS: {
             id: false,
             surname: true,
@@ -112,11 +112,33 @@ export default {
             { text: 'Отчество', value: 'middleName' },
             { text: 'Имя', value: 'name' },
             { text: 'Группа', value: 'numGroup' },
-        ]
+        ],
+        STUDENTS_SELECT_GROUP: []
     },
     mutations: {
+        STUDENTS_COMP(state, items) {
+            state.students = items
+        },
+        ROOM_COMP(state, items) {
+            let sItem = JSON.stringify(items);
+            localStorage.setItem("room", sItem);
+            state.room = items
+        },
+        GROUP_COMP(state, items) {
+            let sItem = JSON.stringify(items);
+            localStorage.setItem("group", sItem);
+            state.group = items
+        },
+        STUDENTS_COMP_TEMPL(state, items) {
+            state.students = items.students
+            state.room = items.room
+            state.group = items.group
+        },
         UPDATE_STUDENTS(state, students) {
             state.STUDENTS = students
+        },
+        UPDATE_STUDENTS_SELECT_GROUP(state, students) {
+            state.STUDENTS_SELECT_GROUP = students
         },
         UPDATE_FILTRES(state, filtres) {
             state.FILTRES = filtres
@@ -129,6 +151,7 @@ export default {
             state.TEMPLATES.push(item);
             let sItem = JSON.stringify(state.TEMPLATES);
             localStorage.setItem("Templates", sItem);
+            state.TEMPLATES = JSON.parse(localStorage.getItem("Templates"));
         },
         DELETE_TEMPLATES(state, id) {
             state.TEMPLATES = state.TEMPLATES.filter(i => {
@@ -136,6 +159,20 @@ export default {
             })
             let sItem = JSON.stringify(state.TEMPLATES);
             localStorage.setItem("Templates", sItem);
+        },
+        UPDATE_TEMPLATES_COMP(state, item) {
+            item.id = state.TEMPLATES_COMPS.length;
+            state.TEMPLATES_COMPS.push(item);
+            let sItem = JSON.stringify(state.TEMPLATES_COMPS);
+            localStorage.setItem("Templates_Comps", sItem);
+            state.TEMPLATES_COMPS = JSON.parse(localStorage.getItem("Templates_Comps"));
+        },
+        DELETE_TEMPLATES_COMP(state, id) {
+            state.TEMPLATES_COMPS = state.TEMPLATES_COMPS.filter(i => {
+                return i.id !== id
+            })
+            let sItem = JSON.stringify(state.TEMPLATES_COMPS);
+            localStorage.setItem("Templates_Comps", sItem);
         },
         UPDATE_HEADERS(state, headers) {
             state.HEADERS = headers
@@ -147,8 +184,6 @@ export default {
             state.SELECTED = students
         },
         UPDATE_HEADERS_TABLES(state, {headers, filtres}) {
-            state.headAndFill.headers = headers;
-            state.headAndFill.filtres = filtres;
             state.TABLE_HEADERS = []
             for (let i in headers) {
                 if (i === "id" & headers[i]) state.TABLE_HEADERS.push(
@@ -244,14 +279,22 @@ export default {
         }
     },
     actions: {
-        async ADD_STUDENT({commit, state}, item) {
+        UPDATE_HEADERS_TABLES_LITE({commit, state}) {
+            commit("UPDATE_FILTRES", {
+                filtres: state.FILTRES
+            })
+            commit("UPDATE_HEADERS", {
+                headers: state.HEADERS
+            })
+        },
+        async ADD_STUDENT({commit, state, dispatch}, item) {
             commit('LOADING', true)
             item.login = (translit(item.surname) + "_" + translit(item.name[0]) + translit(item.middleName[0])).toLowerCase();
             item.password = gen_password();
             await HTTP.post('students', item)
             .then(() => {
                 state.STUDENTS.push(item)
-                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                dispatch('UPDATE_HEADERS_TABLES_LITE')
                 commit('LOADING', false)
             })
             .catch((err) => {
@@ -259,9 +302,9 @@ export default {
                 commit('LOADING', false)
             })
         },
-        async GET_STUDENTS({commit}, item) {
+        async GET_STUDENTS({commit}) {
             commit('LOADING', true)
-            await HTTP.get('students', item)
+            await HTTP.get('students')
             .then(({data}) => {
                 commit('UPDATE_STUDENTS', data)
                 commit('UPDATE_SORT_STUDENTS', data)
@@ -272,7 +315,19 @@ export default {
                 commit('LOADING', false)
             })
         },
-        async UPDATE_STUDENT({commit, state}, item) {
+        async GET_STUDENTS_SELECT_GROUP({commit}, name) {
+            commit('LOADING', true)
+            await HTTP.post('studentsGroup', {name})
+            .then(({data}) => {
+                commit('UPDATE_STUDENTS_SELECT_GROUP', data)
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
+        async UPDATE_STUDENT({commit, state, dispatch}, item) {
             commit('LOADING', true)
             await HTTP.put('students', item)
             .then(() => {
@@ -282,7 +337,7 @@ export default {
                     }
                     return o;
                 });
-                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                dispatch('UPDATE_HEADERS_TABLES_LITE')
                 commit('LOADING', false)
             })
             .catch((err) => {
@@ -290,7 +345,7 @@ export default {
                 commit('LOADING', false)
             })
         },
-        async DELETE_STUDENT({commit, state}) {
+        async DELETE_STUDENT({commit, state, dispatch}) {
             commit('LOADING', true)
             for (let v in state.SELECTED) {
                 await HTTP.post('studentsDel', state.SELECTED[v])
@@ -299,8 +354,11 @@ export default {
                         state.STUDENTS = state.STUDENTS.filter(i => {
                             return i.id !== a.id
                         })
+                        state.SORT_STUDENTS = state.SORT_STUDENTS.filter(i => {
+                            return i.id !== a.id
+                        })
                     })
-                    commit('UPDATE_HEADERS_TABLES', state.headAndFill)
+                    dispatch('UPDATE_HEADERS_TABLES_LITE')
                     commit('LOADING', false)
                 })
                 .catch((err) => {
@@ -315,7 +373,6 @@ export default {
             await HTTP.post('groups', {name})
             .then(() => {
                 state.GROUP_LIST.push(name)
-                commit('UPDATE_HEADERS_TABLES', state.headAndFill)
                 commit('LOADING', false)
             })
             .catch((err) => {

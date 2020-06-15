@@ -574,14 +574,10 @@ export default({
                     i.filtres.low_parents = false;
                 }
             }
-
-            let headAndFill = {
-                headers: {},
-                filtres: {}
-            };
-            headAndFill.headers = i.headers
-            headAndFill.filtres = i.filtres
-            this.$store.commit("UPDATE_HEADERS_TABLES", headAndFill)
+            this.$store.commit("UPDATE_HEADERS_TABLES", {
+                headers: i.headers,
+                filtres: i.filtres
+            })
             this.$store.commit("UPDATE_FILTRES", {
                 filtres: i.filtres,
             })

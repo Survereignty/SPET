@@ -3472,3 +3472,85 @@ created by net/http.(*Server).Serve
 2020/06/15 00:16:50 [INFO] Config file is init
 2020/06/15 00:16:50 [INFO] Database is connected
 2020/06/15 00:16:50 [START] Server listen port -> :3000
+2020/06/15 00:29:18 |------------- Server starting ----------------|
+2020/06/15 00:29:18 [INFO] Logs is init
+2020/06/15 00:29:18 [INFO] Config file is init
+2020/06/15 00:29:18 [INFO] Database is connected
+2020/06/15 00:29:18 [START] Server listen port -> :3000
+2020/06/15 19:27:19 |------------- Server starting ----------------|
+2020/06/15 19:27:19 [INFO] Logs is init
+2020/06/15 19:27:19 [INFO] Config file is init
+2020/06/15 19:27:19 [INFO] Database is connected
+2020/06/15 19:27:19 [START] Server listen port -> :3000
+2020/06/15 19:42:51 |------------- Server starting ----------------|
+2020/06/15 19:42:51 [INFO] Logs is init
+2020/06/15 19:42:51 [INFO] Config file is init
+2020/06/15 19:42:51 [INFO] Database is connected
+2020/06/15 19:42:51 [START] Server listen port -> :3000
+2020/06/15 19:44:27 |------------- Server starting ----------------|
+2020/06/15 19:44:27 [INFO] Logs is init
+2020/06/15 19:44:27 [INFO] Config file is init
+2020/06/15 19:44:27 [INFO] Database is connected
+2020/06/15 19:44:27 [START] Server listen port -> :3000
+2020/06/15 19:45:06 |------------- Server starting ----------------|
+2020/06/15 19:45:06 [INFO] Logs is init
+2020/06/15 19:45:06 [INFO] Config file is init
+2020/06/15 19:45:06 [INFO] Database is connected
+2020/06/15 19:45:06 [START] Server listen port -> :3000
+2020/06/15 19:46:13 |------------- Server starting ----------------|
+2020/06/15 19:46:13 [INFO] Logs is init
+2020/06/15 19:46:13 [INFO] Config file is init
+2020/06/15 19:46:14 [INFO] Database is connected
+2020/06/15 19:46:14 [START] Server listen port -> :3000
+2020/06/15 19:47:17 |------------- Server starting ----------------|
+2020/06/15 19:47:17 [INFO] Logs is init
+2020/06/15 19:47:17 [INFO] Config file is init
+2020/06/15 19:47:17 [INFO] Database is connected
+2020/06/15 19:47:17 [START] Server listen port -> :3000
+2020/06/15 19:50:15 |------------- Server starting ----------------|
+2020/06/15 19:50:15 [INFO] Logs is init
+2020/06/15 19:50:15 [INFO] Config file is init
+2020/06/15 19:50:15 [INFO] Database is connected
+2020/06/15 19:50:15 [START] Server listen port -> :3000
+2020/06/15 19:51:32 |------------- Server starting ----------------|
+2020/06/15 19:51:32 [INFO] Logs is init
+2020/06/15 19:51:32 [INFO] Config file is init
+2020/06/15 19:51:32 [INFO] Database is connected
+2020/06/15 19:51:32 [START] Server listen port -> :3000
+2020/06/15 19:52:50 |------------- Server starting ----------------|
+2020/06/15 19:52:50 [INFO] Logs is init
+2020/06/15 19:52:50 [INFO] Config file is init
+2020/06/15 19:52:50 [INFO] Database is connected
+2020/06/15 19:52:50 [START] Server listen port -> :3000
+2020/06/15 19:54:53 |------------- Server starting ----------------|
+2020/06/15 19:54:53 [INFO] Logs is init
+2020/06/15 19:54:53 [INFO] Config file is init
+2020/06/15 19:54:53 [INFO] Database is connected
+2020/06/15 19:54:53 [START] Server listen port -> :3000
+2020/06/15 19:55:57 |------------- Server starting ----------------|
+2020/06/15 19:55:57 [INFO] Logs is init
+2020/06/15 19:55:57 [INFO] Config file is init
+2020/06/15 19:55:57 [INFO] Database is connected
+2020/06/15 19:55:57 [START] Server listen port -> :3000
+2020/06/15 19:56:29 |------------- Server starting ----------------|
+2020/06/15 19:56:29 [INFO] Logs is init
+2020/06/15 19:56:29 [INFO] Config file is init
+2020/06/15 19:56:29 [INFO] Database is connected
+2020/06/15 19:56:29 [START] Server listen port -> :3000
+2020/06/15 19:56:34 [ERROR] Route -> pq: ошибка синтаксиса (примерное положение: "1601")
+2020/06/15 19:58:50 |------------- Server starting ----------------|
+2020/06/15 19:58:50 [INFO] Logs is init
+2020/06/15 19:58:50 [INFO] Config file is init
+2020/06/15 19:58:50 [INFO] Database is connected
+2020/06/15 19:58:50 [START] Server listen port -> :3000
+2020/06/15 20:02:55 |------------- Server starting ----------------|
+2020/06/15 20:02:55 [INFO] Logs is init
+2020/06/15 20:02:55 [INFO] Config file is init
+2020/06/15 20:02:55 [INFO] Database is connected
+2020/06/15 20:02:55 [START] Server listen port -> :3000
+2020/06/15 20:03:00 [ERROR] Route -> sql: expected 6 destination arguments in Scan, not 24
+2020/06/15 20:05:41 |------------- Server starting ----------------|
+2020/06/15 20:05:41 [INFO] Logs is init
+2020/06/15 20:05:41 [INFO] Config file is init
+2020/06/15 20:05:41 [INFO] Database is connected
+2020/06/15 20:05:41 [START] Server listen port -> :3000

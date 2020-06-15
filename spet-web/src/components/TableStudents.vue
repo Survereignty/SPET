@@ -347,6 +347,12 @@ export default {
     }
     },
     computed: {
+        FILTRES() {
+            return this.$store.state.students.FILTRES
+        },
+        HEADERS() {
+            return this.$store.state.students.HEADERS
+        },
         SORT_STUDENTS() {
             return this.$store.state.students.SORT_STUDENTS
         },
@@ -453,6 +459,33 @@ export default {
         this.dialog_templ = false;
       },
       dis_diltrs() {
+        this.heders = {
+          id: false,
+          surname: true,
+          middleName: true,
+          name: true,
+          date_b: false,
+          city: false,
+          street: false,
+          house: false,
+          flat: false,
+          phone: false,
+          activs: false,
+          info: false,
+          gender: false,
+          numGroup: true,
+          status: false,
+          login: false,
+          password: false,
+          budget: false,
+          orphan: false,
+          invalid: false,
+          low_income: false,
+          low_parents: false,
+          idn: false,
+          kdn: false,
+          many_children: false,
+        },
         this.filtres = {
           id: "",
           surname: "",
