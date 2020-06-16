@@ -8,6 +8,7 @@ CREATE TABLE students (
     street varchar,
     house varchar,
     flat varchar,
+    phone varchar,
     info varchar,
     numGroup varchar,
     activs varchar,

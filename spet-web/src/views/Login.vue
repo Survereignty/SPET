@@ -1,5 +1,11 @@
 <template>
 <v-app app dark class="spet-color">
+          <div class="logo">
+        <v-img
+          src="../assets/bigLogo.png"
+          height="400px"
+        ></v-img>
+    </div>
     <v-layout column justify-center align-center>
         <v-flex xs12 sm8>
         <v-card min-width="600">
@@ -11,7 +17,7 @@
                 <v-text-field
                     v-model="name"
                     :error-messages="nameErrors"
-                    label="Login"
+                    label="Имя пользователя"
                     required
                     @input="$v.name.$touch()"
                     @blur="$v.name.$touch()"
@@ -110,5 +116,10 @@ export default {
 <style>
 .spet-color {
     background: linear-gradient(to top, rgba(175, 255, 175, 0.7), #84bbff) !important;
+}
+.logo {
+    position: absolute;
+    width: 300px;
+    margin: 50px;
 }
 </style>

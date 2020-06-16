@@ -1,6 +1,5 @@
 import {HTTP} from '../aixos/http'
 
-
 const
 rus = "щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
 eng = "shh sh ch cz yu ya yo zh `` y' e` a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g);
@@ -41,8 +40,8 @@ export default {
         HEADERS: {
             id: false,
             surname: true,
-            middleName: true,
             name: true,
+            middleName: true,
             date_b: false,
             city: false,
             street: false,
@@ -69,8 +68,8 @@ export default {
         {
             id: "",
             surname: "",
-            middleName: "",
             name: "",
+            middleName: "",
             date_b: "",
             city: "",
             street: "",
@@ -105,12 +104,12 @@ export default {
         ],
         GROUP_LIST: [
         ],
-        LOADING: false,
+        LOADING: true,
         SELECTED: [],
         TABLE_HEADERS: [
             { text: 'Фамилия', value: 'surname' },
-            { text: 'Отчество', value: 'middleName' },
             { text: 'Имя', value: 'name' },
+            { text: 'Отчество', value: 'middleName' },
             { text: 'Группа', value: 'numGroup' },
         ],
         STUDENTS_SELECT_GROUP: []
@@ -192,11 +191,11 @@ export default {
                 if (i === "surname" & headers[i]) state.TABLE_HEADERS.push(
                     { text: 'Фамилия', value: 'surname' }
                 )
-                if (i === "middleName" & headers[i]) state.TABLE_HEADERS.push(
-                    { text: 'Отчетсво', value: 'middleName' }
-                )
                 if (i === "name" & headers[i]) state.TABLE_HEADERS.push(
                     { text: 'Имя', value: 'name' }
+                )
+                if (i === "middleName" & headers[i]) state.TABLE_HEADERS.push(
+                    { text: 'Отчетсво', value: 'middleName' }
                 )
                 if (i === "date_b" & headers[i]) state.TABLE_HEADERS.push(
                     { text: 'Дата рождения', value: 'date_b' }
@@ -268,6 +267,7 @@ export default {
                     {
                         if (state.STUDENTS[el][i] != filtres[i]) {
                             add = false;
+                            console.log(state.STUDENTS[el][i])
                         }
                     }
                 }
@@ -292,8 +292,8 @@ export default {
             item.login = (translit(item.surname) + "_" + translit(item.name[0]) + translit(item.middleName[0])).toLowerCase();
             item.password = gen_password();
             await HTTP.post('students', item)
-            .then(() => {
-                state.STUDENTS.push(item)
+            .then(({data}) => {
+                state.STUDENTS.push(data)
                 dispatch('UPDATE_HEADERS_TABLES_LITE')
                 commit('LOADING', false)
             })
@@ -301,6 +301,44 @@ export default {
                 console.log(err)
                 commit('LOADING', false)
             })
+        },
+        async ADD_STUDENT_ALL({commit, dispatch}, data) {
+            commit('LOADING', true)
+            data.forEach((item) => {
+                if (item[0] == "Фамилия" | item[0] == "") {
+                    console.log("")
+                } else {
+                    let obj = {
+                        id: "",
+                        surname: item[0],
+                        name: item[1],
+                        middleName: item[2],
+                        date_b: "",
+                        city: "",
+                        street: "",
+                        house: "",
+                        flat: "",
+                        activs: "",
+                        phone: "",
+                        info: "",
+                        gender: "",
+                        numGroup: item[3],
+                        status: "",
+                        login: "",
+                        password: "",
+                        budget: "",
+                        orphan: false,
+                        invalid: false,
+                        low_income: false,
+                        low_parents: false,
+                        idn: false,
+                        kdn: false,
+                        many_children: false
+                    }
+                    dispatch("ADD_STUDENT", obj)
+                }
+            });
+            commit('LOADING', false)
         },
         async GET_STUDENTS({commit}) {
             commit('LOADING', true)
@@ -330,10 +368,10 @@ export default {
         async UPDATE_STUDENT({commit, state, dispatch}, item) {
             commit('LOADING', true)
             await HTTP.put('students', item)
-            .then(() => {
+            .then(({data}) => {
                 state.STUDENTS = state.STUDENTS.map(o => {
-                    if (o.id === item.id) {
-                        return item;
+                    if (o.id === data.id) {
+                        return data;
                     }
                     return o;
                 });

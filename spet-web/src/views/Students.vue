@@ -92,7 +92,7 @@
                     v-for="item in TEMPLATES"
                     :key="item.id"
                     class="mx-auto ma-2"
-                    max-width="240"
+                    max-width="250"
                 >
 
                     <v-card-text class="text--primary">
@@ -133,25 +133,6 @@
             <span class="hidden-sm-and-down"></span>
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon>
-            <v-icon>mdi-apps</v-icon>
-        </v-btn>
-        <v-btn icon>
-            <v-icon>mdi-bell</v-icon>
-        </v-btn>
-        <v-btn
-            icon
-            large
-        >
-            <v-avatar
-            size="32px"
-            item
-            >
-            <v-img
-                src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-                alt="Vuetify"
-            ></v-img></v-avatar>
-        </v-btn>
         </v-app-bar>
         <v-content>
             <TableStudents></TableStudents>
@@ -447,6 +428,23 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialog_table" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                <span class="headline">Загрузите фаил формата .csv</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-file-input show-size v-model="file" label="Вставить файл"></v-file-input>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red darken-1" text @click="dialog_table = false">Отмена</v-btn>
+                <v-btn color="blue darken-1" text @click="SAVE_TABLE">Загрузить</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
@@ -460,6 +458,7 @@ export default({
     },
     data () {
         return {
+            dialog_table: false,
             dialog_templ: false,
             groupName: "",
             dialog_group: false,
@@ -469,6 +468,7 @@ export default({
             mode: false,
             dialog_war: false,
             drawer: null,
+            file: "",
             items: [
                 { icon: 'mdi-plus', text: 'Добавить студента' },
                 { icon: 'mdi-credit-card', text: 'Загрузить таблицу' },
@@ -519,6 +519,9 @@ export default({
         },
         TEMPLATES() {
             return this.$store.state.students.TEMPLATES
+        },
+        LOADING() {
+            return this.$store.state.students.LOADING
         },
     },
     created() {
@@ -588,12 +591,6 @@ export default({
         OPEN_WAR() {
             this.dialog_war = true;
         },
-        OPEN_LOAD() {
-            this.dialog_load = true;
-        },
-        LOAD_FILE() {
-            this.dialog_load = true;
-        },
         CREATE() {
             this.red_student = {
                 id: "",
@@ -651,7 +648,16 @@ export default({
             this.dialog = false;
         },
         CREATE_ON_TABLE() {
-            console.log("CREATE_ON_TABLE")
+            this.dialog_table = true;
+        },
+        SAVE_TABLE() {
+            this.$papa.parse(this.file, {
+                delimiter: ",",
+                complete: (results) => {
+                    this.$store.dispatch("ADD_STUDENT_ALL", results.data);
+                }
+            })
+            this.dialog_table = false;
         },
         EDIT() {
             this.$store.dispatch("UPDATE_STUDENT", this.red_student);
@@ -733,7 +739,6 @@ export default({
     left: 0;
     margin: 30px;
 }
-
 .spet_fade-enter-active, .spet_fade-leave-active {
     transition: opacity .5s;
 }

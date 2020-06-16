@@ -291,8 +291,8 @@ export default {
         heders: {
           id: false,
           surname: true,
-          middleName: true,
           name: true,
+          middleName: true,
           date_b: false,
           city: false,
           street: false,
@@ -320,8 +320,8 @@ export default {
         {
           id: "",
           surname: "",
-          middleName: "",
           name: "",
+          middleName: "",
           date_b: "",
           city: "",
           street: "",
@@ -462,8 +462,8 @@ export default {
         this.heders = {
           id: false,
           surname: true,
-          middleName: true,
           name: true,
+          middleName: true,
           date_b: false,
           city: false,
           street: false,
@@ -489,8 +489,8 @@ export default {
         this.filtres = {
           id: "",
           surname: "",
-          middleName: "",
           name: "",
+          middleName: "",
           date_b: "",
           city: "",
           street: "",
