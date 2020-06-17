@@ -26,3 +26,10 @@ CREATE TABLE students (
     budget varchar
 );
 
+CREATE TABLE users (
+    id bigserial not null primary key,
+    login       varchar,
+    password    varchar,
+    role        int
+);
+

@@ -10,6 +10,7 @@ type Student struct {
 	Street        string `json:"street"`
 	House         string `json:"house"`
 	Flat          string `json:"flat"`
+	Phone         string `json:"phone"`
 	Info          string `json:"info"`
 	NumGroup      string `json:"numGroup"`
 	Activs        string `json:"activs"`

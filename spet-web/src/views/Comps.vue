@@ -9,7 +9,7 @@
                     v-for="item in TEMPLATES_COMPS"
                     :key="item.id"
                     class="mx-auto ma-2"
-                    max-width="240"
+                    max-width="250"
                 >
 
                     <v-card-text class="text--primary">

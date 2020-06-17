@@ -11,8 +11,7 @@ import (
 func main() {
 
 	// Инициализация логов
-	err := lig.Create("./logs/logs.txt")
-	if err != nil {
+	if err := lig.Create("./logs/logs.txt"); err != nil {
 		log.Fatal(err)
 	}
 	lig.Info("Logs is init")

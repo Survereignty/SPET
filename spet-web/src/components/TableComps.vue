@@ -185,19 +185,43 @@ export default {
         })
         },
         Quit(item) {
-            console.log(item)
+            let obj = {
+                login: item.login,
+                numGroup: this.group,
+                numRoom: this.room,
+                numComp: item.comp
+            }
+            this.$store.dispatch("TurnOFFPC", obj)
         },
         Use(item) {
-            console.log(item)
+            let obj = {
+                login: item.login,
+                numGroup: this.group,
+                numRoom: this.room,
+                numComp: item.comp
+            }
+            this.$store.dispatch("TurnONPC", obj)
         },
         UseAll() {
             this.students.map((s) => {
-                console.log(s.comp)
+                let obj = {
+                    login: s.login,
+                    numGroup: this.group,
+                    numRoom: this.room,
+                    numComp: s.comp
+                }
+                this.$store.dispatch("TurnONPC", obj)
             })
         },
         QuitAll() {
             this.students.map((s) => {
-                console.log(s.comp)
+                let obj = {
+                    login: s.login,
+                    numGroup: this.group,
+                    numRoom: this.room,
+                    numComp: s.comp
+                }
+                this.$store.dispatch("TurnOFFPC", obj)
             })
         },
         SaveTempl() {

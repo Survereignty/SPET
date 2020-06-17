@@ -287,6 +287,30 @@ export default {
                 headers: state.HEADERS
             })
         },
+        async TurnONPC({commit}, item) {
+            commit('LOADING', true)
+            item.numGroup = translit(item.numGroup);
+            await HTTP.post('turnONPC', item)
+            .then(() => {
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
+        async TurnOFFPC({commit}, item) {
+            commit('LOADING', true)
+            item.numGroup = translit(item.numGroup);
+            await HTTP.post('turnOFFPC', item)
+            .then(() => {
+                commit('LOADING', false)
+            })
+            .catch((err) => {
+                console.log(err)
+                commit('LOADING', false)
+            })
+        },
         async ADD_STUDENT({commit, state, dispatch}, item) {
             commit('LOADING', true)
             item.login = (translit(item.surname) + "_" + translit(item.name[0]) + translit(item.middleName[0])).toLowerCase();

@@ -8,13 +8,6 @@ type GroupRep struct {
 	store *Store
 }
 
-// Id 	 		int 	`json:"id"`
-// Surname 	string `json:"surname"`
-// MiddleName 	string `json:"middleName"`
-// Name 		string `json:"name"`
-// NumGroup 	string `json:"numGroup"`
-// Del				bool `json:"del"`
-
 // Создать Группу
 func (r *GroupRep) Create(m *model.Group) error {
 	if err := r.store.db.QueryRow(

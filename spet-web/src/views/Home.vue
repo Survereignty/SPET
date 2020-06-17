@@ -18,7 +18,7 @@
                   max-width="344"
                   @click="$router.push({ path: 'students' })"
                 >
-                  <v-img
+                <v-img
                     src="../assets/bd.png"
                     height="200px"
                   ></v-img>
@@ -40,6 +40,20 @@
 
                   <v-card-title>
                     Компьютеры
+                  </v-card-title>
+                </v-card>
+                <v-card
+                  class="mx-5 scale"
+                  max-width="344"
+                  @click="$router.push({ path: 'docs' })"
+                >
+                  <v-img
+                    src="../assets/docs.png"
+                    height="200px"
+                  ></v-img>
+
+                  <v-card-title>
+                    Документы
                   </v-card-title>
                 </v-card>
             </v-row>

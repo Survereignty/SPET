@@ -51,6 +51,19 @@ Vue.use(VueRouter)
     }
   },
   {
+    path: '/docs/edit',
+    name: 'DocsRed',
+    component: () => import('../views/DocsRed.vue'),
+    beforeEnter(to, from, next) {
+      if (store.state.user.login) {
+        next()
+      } else {
+        router.push('/login')
+        store.state.user.from = from
+      }
+    }
+  },
+  {
     path: '/comps',
     name: 'Comps',
     component: () => import('../views/Comps.vue'),
