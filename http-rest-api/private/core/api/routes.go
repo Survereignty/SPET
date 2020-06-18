@@ -33,7 +33,15 @@ func (s *Api) Routers() {
 	s.router.HandleFunc("/turnONPC", s.TurnONPC()).Methods(http.MethodPost, http.MethodOptions)
 	s.router.HandleFunc("/turnOFFPC", s.TurnOFFPC()).Methods(http.MethodPost, http.MethodOptions)
 
-	s.router.HandleFunc("/students", s.Students()).Methods(http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodPut, http.MethodOptions)
+	s.router.HandleFunc("/students",
+		s.Students()).Methods(
+		http.MethodGet,
+		http.MethodPost,
+		http.MethodDelete,
+		http.MethodPut,
+		http.MethodOptions,
+	)
+
 	s.router.HandleFunc("/studentsGroup", s.StudentsGroup()).Methods(http.MethodPost, http.MethodOptions)
 	s.router.HandleFunc("/studentsDel", s.StudentsDel()).Methods(http.MethodPost, http.MethodOptions)
 }
@@ -48,7 +56,8 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 func (s *Api) setHeaders(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	(*w).Header().Set("Access-Control-Allow-Headers",
+		"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
 
 func (s *Api) indexPage() http.HandlerFunc {

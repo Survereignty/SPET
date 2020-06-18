@@ -50,7 +50,7 @@ export default {
                 console.log(data)
                 console.log(commit)
                 var a = document.createElement("a")
-                a.setAttribute("href", "http://localhost:3000/docs/temp/"+file +"_new.docx");
+                a.setAttribute("href", "http://local.spet.pro:15280/docs/temp/"+file +"_new.docx");
                 a.click();
             })
             .catch((err) => {
