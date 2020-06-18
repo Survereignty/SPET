@@ -51,11 +51,9 @@ export default {
             })
             .then(() => {
                 var a = document.createElement("a")
-                a.setAttribute("href", "http://local.spet.pro:15280/docs/temp/"+ file +"_new.docx");
-                console.log("http://localhost:3000/docs/temp/"+ file +"_new_" + data.idi +".docx")
-                a.setAttribute("href", "http://localhost:3000/docs/temp/"+ file +"_new_" + data.idi +".docx");
+                a.setAttribute("href", "http://local.spet.pro:15280/docs/temp/"+ file +"_new_" + data.idi +".docx");
+                //a.setAttribute("href", "http://localhost:3000/docs/temp/"+ file +"_new_" + data.idi +".docx");
                 a.click();
-                console.log("1")
             })
             .catch((err) => {
                 console.log(err)

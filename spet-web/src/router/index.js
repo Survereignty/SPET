@@ -11,12 +11,8 @@ Vue.use(VueRouter)
     name: 'Home',
     component: Home,
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   },
   {
@@ -29,12 +25,8 @@ Vue.use(VueRouter)
     name: 'Students',
     component: () => import('../views/Students.vue'),
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   },
   {
@@ -42,12 +34,8 @@ Vue.use(VueRouter)
     name: 'Docs',
     component: () => import('../views/Docs.vue'),
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   },
   {
@@ -55,12 +43,8 @@ Vue.use(VueRouter)
     name: 'DocsRed',
     component: () => import('../views/DocsRed.vue'),
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   },
   {
@@ -68,12 +52,8 @@ Vue.use(VueRouter)
     name: 'Comps',
     component: () => import('../views/Comps.vue'),
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   },
   {
@@ -81,12 +61,8 @@ Vue.use(VueRouter)
     name: 'Table',
     component: () => import('../views/Table.vue'),
     beforeEnter(to, from, next) {
-      if (store.state.user.login) {
-        next()
-      } else {
-        router.push('/login')
-        store.state.user.from = from
-      }
+      if (to.name !== 'Login' && !store.state.user.login) next({ name: 'Login' })
+      else next()
     }
   }
 ]

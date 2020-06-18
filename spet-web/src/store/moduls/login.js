@@ -3,10 +3,10 @@
 export default {
     state: {
         from: {},
-        login: false,
-        loginName: "",
-        password: "",
-        role: "",
+        login: localStorage.getItem("login") || false,
+        loginName: localStorage.getItem("loginName") || "",
+        password: localStorage.getItem("password") || "",
+        role: localStorage.getItem("role") || 3,
         save: false,
     },
     mutations: {
@@ -30,17 +30,18 @@ export default {
         async LOGIN({commit}, input) {
             if (input.loginName == "admin" & input.password == "admin") {
                 commit("SET_SAVE", true);
-                let user = {
+                commit('UPDATE_USER', {
                     loginName: input.loginName,
                     password: input.password,
+                    role: 1,
+                })
+                if (input.save) {
+                    localStorage.setItem("login", true);
+                    localStorage.setItem("loginName", input.loginName);
+                    localStorage.setItem("password", input.password);
+                    localStorage.setItem("role", 1);
                 }
-                localStorage.setItem("user", user);
             }
-            commit('UPDATE_USER', {
-                loginName: input.loginName,
-                password: input.password,
-                role: 1,
-            })
         },
         async LOGOUT({commit}) {
             commit('LOGOUT');

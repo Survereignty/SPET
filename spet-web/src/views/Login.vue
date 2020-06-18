@@ -98,7 +98,8 @@ export default {
         submit () {
             this.$store.dispatch("LOGIN", {
                 loginName: this.name,
-                password: this.password
+                password: this.password,
+                save: this.checkbox
             })
             this.$router.push("/")
         },

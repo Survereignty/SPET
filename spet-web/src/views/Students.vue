@@ -139,13 +139,27 @@
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title
-            style="width: 300px"
-            class="ml-0 pl-4"
+        style="width: 300px"
+        class="ml-0 pl-4"
+      >
+        <span class="hidden-sm-and-down">Студенты</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        large
+        @click="exit"
+      >
+        <v-avatar
+          size="32px"
+          item
         >
-            <span class="hidden-sm-and-down"></span>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-        </v-app-bar>
+          <v-img
+            src="../assets/exit.svg"
+            alt="Vuetify"
+          ></v-img></v-avatar>
+      </v-btn>
+    </v-app-bar>
         <v-content>
             <TableStudents></TableStudents>
         </v-content>
@@ -589,6 +603,10 @@ export default({
         this.$store.dispatch("GET_DOCS")
     },
     methods: {
+        exit() {
+            this.$store.dispatch("LOGOUT")
+            this.$router.push({ path:'/login'})
+        },
         del_templ({id}) {
             this.$store.commit("DELETE_TEMPLATES", id)
         },
@@ -719,29 +737,26 @@ export default({
             this.$store.dispatch("GET_DOCS_NAME", i)
             .then(() => {
                 let obj = {};
-                for (let keyS in this.SORT_STUDENTS) {
-                    obj = {};
-                    for(let keyC in this.CURRENT_DOC) {
-                        if (keyC == "Surname") {
-                            obj.Surname = this.SORT_STUDENTS[keyS].surname
-                        } else if (keyC == "Name") {
-                            obj.Name = this.SORT_STUDENTS[keyS].name
-                        } else if (keyC == "Middle") {
-                            obj.Middle = this.SORT_STUDENTS[keyS].middleName
-                        } else if (keyC == "Phone") {
-                            obj.Phone = this.SORT_STUDENTS[keyS].phone
-                        } else if (keyC == "Date_B") {
-                            obj.Date_B = this.SORT_STUDENTS[keyS].date_b
-                        } else if (keyC == "CurrentDate") {
-                            let now = new Date();
-                            obj.CurrentDate = formatDate(now)
-                        } else if (keyC == "NumGroup") {
-                            obj.NumGroup = this.SORT_STUDENTS[keyS].numGroup
-                        }
+                for(let keyC in this.CURRENT_DOC) {
+                    if (keyC == "Surname") {
+                        obj.Surname = this.SELECTED[0].surname
+                    } else if (keyC == "Name") {
+                        obj.Name = this.SELECTED[0].name
+                    } else if (keyC == "Middle") {
+                        obj.Middle = this.SELECTED[0].middleName
+                    } else if (keyC == "Phone") {
+                        obj.Phone = this.SELECTED[0].phone
+                    } else if (keyC == "Date_B") {
+                        obj.Date_B = this.SELECTED[0].date_b
+                    } else if (keyC == "CurrentDate") {
+                        let now = new Date();
+                        obj.CurrentDate = formatDate(now)
+                    } else if (keyC == "NumGroup") {
+                        obj.NumGroup = this.SELECTED[0].numGroup
                     }
-                    let idi = this.SORT_STUDENTS[keyS].id
-                    this.$store.dispatch("CREATE_DOCS_NAME", {obj, idi})
                 }
+                let idi = this.SELECTED[0].id
+                this.$store.dispatch("CREATE_DOCS_NAME", {obj, idi})
             })
             this.dialog_docs = false;
         },

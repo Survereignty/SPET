@@ -42,6 +42,27 @@
             dark
         >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title
+        style="width: 300px"
+        class="ml-0 pl-4"
+      >
+        <span class="hidden-sm-and-down">Компьютеры</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+        large
+        @click="exit"
+      >
+        <v-avatar
+          size="32px"
+          item
+        >
+          <v-img
+            src="../assets/exit.svg"
+            alt="Vuetify"
+          ></v-img></v-avatar>
+      </v-btn>
     </v-app-bar>
     <v-container
     class="fill-height"
@@ -81,6 +102,10 @@ export default {
         },
         use_templ(i) {
             this.$store.commit("STUDENTS_COMP_TEMPL", i)
+        },
+        exit() {
+            this.$store.dispatch("LOGOUT")
+            this.$router.push({ path:'/login'})
         }
     }
 }
