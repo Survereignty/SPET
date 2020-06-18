@@ -39,6 +39,18 @@
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item
+                    @click="CREATE_ON_DOCS"
+                >
+                    <v-list-item-action>
+                    <v-icon>{{ items[6].icon }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                    <v-list-item-title class="grey--text">
+                        {{ items[6].text }}
+                    </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+                <v-list-item
                     @click="CREATE_ON_TABLE"
                 >
                     <v-list-item-action>
@@ -435,7 +447,7 @@
                 </v-card-title>
                 <v-card-text>
                 <v-container>
-                    <v-file-input show-size v-model="file" label="Вставить файл"></v-file-input>
+                    <v-file-input show-size value="" v-model="file" label="Вставить файл"></v-file-input>
                 </v-container>
                 </v-card-text>
                 <v-card-actions>
@@ -445,11 +457,48 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="dialog_docs" persistent max-width="600px">
+            <v-card>
+                <v-card-title>
+                <span class="headline">Выберите шаблон</span>
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                <v-simple-table>
+                    <template v-slot:default>
+                    <tbody>
+                        <tr v-for="item in DOCS" :key="item" style="cursor:pointer" @click="CREATE_DOCS(item)">
+                        <td>
+                            <img src="../assets/docx.png" alt="docs" width="40px" height="40px" style="padding: 2px">
+                        </td>
+                        <td>{{ item }}</td>
+                        </tr>
+                    </tbody>
+                    </template>
+                </v-simple-table>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red darken-1" text @click="dialog_docs = false">Отмена</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-app>
 </template>
 
 <script>
 import TableStudents from '../components/TableStudents'
+
+const formatDate = (date) => {
+    var dd = date.getDate();
+    if (dd < 10) dd = '0' + dd;
+    var mm = date.getMonth() + 1;
+    if (mm < 10) mm = '0' + mm;
+    var yy = date.getFullYear() % 100;
+    if (yy < 10) yy = '0' + yy;
+    return dd + '.' + mm + '.' + yy;
+}
 
 export default({
     name: "Students",
@@ -458,6 +507,7 @@ export default({
     },
     data () {
         return {
+            dialog_docs: false,
             dialog_table: false,
             dialog_templ: false,
             groupName: "",
@@ -476,6 +526,7 @@ export default({
                 { icon: 'mdi-pencil', text: 'Изменить' },
                 { icon: 'mdi-delete', text: 'Удалить' },
                 { icon: 'mdi-account-group', text: 'Добавить группу' },
+                { icon: 'mdi-file-document', text: 'Создать документ' },
             ],
             red_student:
             {
@@ -508,6 +559,9 @@ export default({
         }
     },
     computed: {
+        DOCS() {
+            return this.$store.state.docs.DOCS
+        },
         ITEMS() {
             return this.$store.state.students.ITEMS
         },
@@ -523,9 +577,16 @@ export default({
         LOADING() {
             return this.$store.state.students.LOADING
         },
+        CURRENT_DOC() {
+            return this.$store.state.docs.CURRENT_DOC
+        },
+        SORT_STUDENTS() {
+            return this.$store.state.students.SORT_STUDENTS
+        },
     },
     created() {
         this.$store.dispatch("GET_GROUPS");
+        this.$store.dispatch("GET_DOCS")
     },
     methods: {
         del_templ({id}) {
@@ -649,6 +710,40 @@ export default({
         },
         CREATE_ON_TABLE() {
             this.dialog_table = true;
+        },
+        CREATE_ON_DOCS() {
+            this.dialog_docs = true;
+        },
+        CREATE_DOCS(item) {
+            let i = item.slice(0, -5)
+            this.$store.dispatch("GET_DOCS_NAME", i)
+            .then(() => {
+                let obj = {};
+                for (let keyS in this.SORT_STUDENTS) {
+                    obj = {};
+                    for(let keyC in this.CURRENT_DOC) {
+                        if (keyC == "Surname") {
+                            obj.Surname = this.SORT_STUDENTS[keyS].surname
+                        } else if (keyC == "Name") {
+                            obj.Name = this.SORT_STUDENTS[keyS].name
+                        } else if (keyC == "Middle") {
+                            obj.Middle = this.SORT_STUDENTS[keyS].middleName
+                        } else if (keyC == "Phone") {
+                            obj.Phone = this.SORT_STUDENTS[keyS].phone
+                        } else if (keyC == "Date_B") {
+                            obj.Date_B = this.SORT_STUDENTS[keyS].date_b
+                        } else if (keyC == "CurrentDate") {
+                            let now = new Date();
+                            obj.CurrentDate = formatDate(now)
+                        } else if (keyC == "NumGroup") {
+                            obj.NumGroup = this.SORT_STUDENTS[keyS].numGroup
+                        }
+                    }
+                    let idi = this.SORT_STUDENTS[keyS].id
+                    this.$store.dispatch("CREATE_DOCS_NAME", {obj, idi})
+                }
+            })
+            this.dialog_docs = false;
         },
         SAVE_TABLE() {
             this.$papa.parse(this.file, {

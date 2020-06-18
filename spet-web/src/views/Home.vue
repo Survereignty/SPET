@@ -9,14 +9,13 @@
       <v-layout column justify-center align-center>
           <v-col cols="12">
             <v-row
-              :align="alignment"
               :justify="'center'"
               style="height: 300px;"
             >
               <v-card
                   class="mx-5 scale"
                   max-width="344"
-                  @click="$router.push({ path: 'students' })"
+                  @click="$router.push({ path: '/students' })"
                 >
                 <v-img
                     src="../assets/bd.png"
@@ -31,7 +30,7 @@
                 <v-card
                   class="mx-5 scale"
                   max-width="344"
-                  @click="$router.push({ path: 'comps' })"
+                  @click="$router.push({ path: '/comps' })"
                 >
                   <v-img
                     src="../assets/comps.png"
@@ -45,7 +44,7 @@
                 <v-card
                   class="mx-5 scale"
                   max-width="344"
-                  @click="$router.push({ path: 'docs' })"
+                  @click="$router.push({ path: '/docs' })"
                 >
                   <v-img
                     src="../assets/docs.png"

@@ -96,7 +96,7 @@ export default {
             dop: ["Сирота", "Инвалид", "Мал. Обес.", "ИДН", "КДН", "Многодет.", "Непол. семья"],
             budget: ["Бюджетная", "Платная"],
             gender: ["М", "Ж"],
-            status: ["u", "i"]
+            status: ["Учиться", "Не учиться"]
         },
         STUDENTS: [
         ],
@@ -258,24 +258,35 @@ export default {
                     { text: 'Многодет.', value: 'many_children' }
                 )
             }
-            let Array = [];
+            let ArrayMain = [];
 
             for (let el in state.STUDENTS) {
                 let add = true;
+                let addfull = false;
                 for (let i in state.STUDENTS[el]) {
                     if (filtres[i] != "")
                     {
+                        if (Array.isArray(filtres[i])) {
+                            for(let arrItem in filtres[i]) {
+                                if (state.STUDENTS[el][i] != filtres[i][arrItem]) {
+                                    add = false;
+                                } else {
+                                    addfull = true;
+                                }
+                            }
+                        }
                         if (state.STUDENTS[el][i] != filtres[i]) {
                             add = false;
-                            console.log(state.STUDENTS[el][i])
                         }
                     }
                 }
                 if (add) {
-                    Array.push(state.STUDENTS[el]);
+                    ArrayMain.push(state.STUDENTS[el]);
+                } else if (addfull) {
+                    ArrayMain.push(state.STUDENTS[el]);
                 }
             }
-            state.SORT_STUDENTS = Array
+            state.SORT_STUDENTS = ArrayMain
         }
     },
     actions: {

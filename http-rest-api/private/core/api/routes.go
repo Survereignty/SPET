@@ -158,6 +158,7 @@ func (s *Api) CreateDocs() http.HandlerFunc {
 
 	type Data struct {
 		File string                 `json:"file"`
+		Id   string                 `json:"id"`
 		Obj  map[string]interface{} `json:"obj"`
 	}
 
@@ -166,14 +167,16 @@ func (s *Api) CreateDocs() http.HandlerFunc {
 
 		if r.Method == http.MethodPost {
 
+			os.RemoveAll("docs/docx/temp/*")
+
 			u := &Data{}
 			json.NewDecoder(r.Body).Decode(u)
 
 			var path_to_docx = "docs/docx/" + u.File + ".docx"
-			var path_to_docx_new = "docs/temp/" + u.File + "_new.docx"
+			var path_to_docx_new = "docs/temp/" + u.File + "_new_" + u.Id + ".docx"
 			var path_to_json = "docs/json/" + u.File + ".json"
-			var path_to_temp = "docs/temp/" + u.File + "_temp"
-			var path_to_zip = "docs/temp/" + u.File + ".zip"
+			var path_to_temp = "docs/temp/" + u.File + "_temp" + u.Id
+			var path_to_zip = "docs/temp/" + u.File + "_temp_" + u.Id + ".zip"
 			var path_to_data = path_to_temp + "/word/document.xml"
 
 			dataJSON, err := ioutil.ReadFile(path_to_json)

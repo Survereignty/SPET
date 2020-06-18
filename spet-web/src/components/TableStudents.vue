@@ -79,12 +79,12 @@
                         <v-text-field v-model="filtres.street" label="Улица"></v-text-field>
                       </v-row>
                       <v-row>
-                        <v-checkbox v-model="heders.flat"></v-checkbox>
-                        <v-text-field v-model="filtres.flat" label="Квартира"></v-text-field>
-                      </v-row>
-                      <v-row>
                         <v-checkbox v-model="heders.house"></v-checkbox>
                         <v-text-field v-model="filtres.house" label="Дом"></v-text-field>
+                      </v-row>
+                      <v-row>
+                        <v-checkbox v-model="heders.flat"></v-checkbox>
+                        <v-text-field v-model="filtres.flat" label="Квартира"></v-text-field>
                       </v-row>
                       <v-row>
                         <v-checkbox v-model="heders.phone"></v-checkbox>

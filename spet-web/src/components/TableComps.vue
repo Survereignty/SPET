@@ -47,8 +47,8 @@
                             <tr v-for="item in students_l" :key="item.name">
                                 <td class="text-center">{{ item.id }}</td>
                                 <td class="text-center">{{ item.surname }}</td>
-                                <td class="text-center">{{ item.name }}</td>
                                 <td class="text-center">{{ item.middleName }}</td>
+                                <td class="text-center">{{ item.name }}</td>
                                 <td class="text-center">
                                     <v-col>
                                     <v-text-field style="max-width: 50px"

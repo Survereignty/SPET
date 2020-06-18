@@ -3,7 +3,7 @@
 export default {
     state: {
         from: {},
-        login: true,
+        login: false,
         loginName: "",
         password: "",
         role: "",
@@ -28,7 +28,7 @@ export default {
     },
     actions: {
         async LOGIN({commit}, input) {
-            if (input.save) {
+            if (input.loginName == "admin" & input.password == "admin") {
                 commit("SET_SAVE", true);
                 let user = {
                     loginName: input.loginName,

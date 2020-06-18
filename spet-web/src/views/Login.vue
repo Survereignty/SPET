@@ -18,25 +18,25 @@
                     v-model="name"
                     :error-messages="nameErrors"
                     label="Имя пользователя"
-                    required
                     @input="$v.name.$touch()"
                     @blur="$v.name.$touch()"
                 ></v-text-field>
 
-                <v-text-field
-                    v-model="password"
-                    :error-messages="passwordErrors"
-                    label="Пароль"
-                    required
-                    name="password"
-                    @input="$v.password.$touch()"
-                    @blur="$v.password.$touch()"
-                ></v-text-field>
+                    <v-text-field
+                        v-model="password"
+                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="show1 ? 'text' : 'password'"
+                        name="input-10-1"
+                        label="Пароль"
+                        counter
+                        @click:append="show1 = !show1"
+                        @input="$v.password.$touch()"
+                        @blur="$v.password.$touch()"
+                    ></v-text-field>
 
                     <v-checkbox
                         v-model="checkbox"
                         label="Запомнить пароль?"
-                        required
                     ></v-checkbox>
 
                     <v-btn class="green mr-4" dark @click="submit">Войти</v-btn>
@@ -71,6 +71,10 @@ export default {
             name: '',
             password: '',
             checkbox: false,
+            show1: false,
+            rules: {
+                required: value => !!value || 'Пароль обязателен!',
+            },
         }
     },
     computed: {
@@ -92,16 +96,11 @@ export default {
     },
     methods: {
         submit () {
-            this.$v.$touch()
             this.$store.dispatch("LOGIN", {
                 loginName: this.name,
                 password: this.password
             })
-            try {
-                this.$router.push(this.FROM)
-            } catch {
-                this.$router.push("/")
-            }
+            this.$router.push("/")
         },
         clear () {
             this.$v.$reset()

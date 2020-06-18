@@ -32,7 +32,7 @@ export default {
             })
         },
         async GET_DOCS_NAME({commit}, file) {
-            HTTP.post("/getDocs", {file})
+            await HTTP.post("/getDocs", {file})
             .then(({data}) => {
                 commit("UPDATE_CURRENT_DOC", data)
                 commit("UPDATE_CURRENT_DOC_RED", data)
@@ -42,16 +42,20 @@ export default {
                 console.log(err)
             })
         },
-        async CREATE_DOCS_NAME({commit, state}, obj) {
+        async CREATE_DOCS_NAME({state}, data) {
             let file = state.CURRENT_DOC_NAME
-            console.log({obj, file})
-            HTTP.post("/createDocs", {obj, file})
-            .then(({data}) => {
-                console.log(data)
-                console.log(commit)
+            HTTP.post("/createDocs", {
+                file: file,
+                id: String(data.idi),
+                obj: data.obj
+            })
+            .then(() => {
                 var a = document.createElement("a")
-                a.setAttribute("href", "http://local.spet.pro:15280/docs/temp/"+file +"_new.docx");
+                a.setAttribute("href", "http://local.spet.pro:15280/docs/temp/"+ file +"_new.docx");
+                console.log("http://localhost:3000/docs/temp/"+ file +"_new_" + data.idi +".docx")
+                a.setAttribute("href", "http://localhost:3000/docs/temp/"+ file +"_new_" + data.idi +".docx");
                 a.click();
+                console.log("1")
             })
             .catch((err) => {
                 console.log(err)
